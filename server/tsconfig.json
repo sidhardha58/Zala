@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "strict": true,
+    "types": ["node"], // ✅ Enables Node.js types like `process`
+    "outDir": "./dist", // ✅ Output directory for compiled JS
+    "rootDir": "./", // ✅ Assumes source files are in the root of this folder
+    "skipLibCheck": true
+  },
+  "include": ["**/*.ts"],
+  "exclude": ["node_modules"]
+}

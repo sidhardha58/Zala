@@ -1,0 +1,161 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ZALA Design System - Where Books Come Alive
+Cozy bookish aesthetic meets futuristic VR technology
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Base colors - Warm & Inviting */
+    --background: 33 45% 96%;  /* Cream #FAF5EE */
+    --foreground: 25 25% 25%;  /* Dark Brown for text */
+
+    --card: 33 45% 98%;
+    --card-foreground: 25 25% 25%;
+
+    --popover: 33 45% 98%;
+    --popover-foreground: 25 25% 25%;
+
+    /* Primary - Navy Accent */
+    --primary: 210 77% 13%;  /* Navy #081B3A */
+    --primary-foreground: 33 45% 96%;
+
+    /* Secondary - Warm Brown */
+    --secondary: 28 37% 35%;  /* Warm Brown #7A5A3A */
+    --secondary-foreground: 33 45% 96%;
+
+    /* Muted tones */
+    --muted: 33 30% 90%;
+    --muted-foreground: 25 15% 45%;
+
+    /* Accent - Deep Gold */
+    --accent: 43 56% 51%;  /* Deep Gold #C59A3F */
+    --accent-foreground: 25 25% 25%;
+
+    /* Teal pop */
+    --teal: 187 69% 37%;  /* Teal #1E9AA7 */
+    --teal-foreground: 33 45% 96%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 33 45% 96%;
+
+    --border: 33 25% 85%;
+    --input: 33 25% 88%;
+    --ring: 43 56% 51%;
+
+    --radius: 0.75rem;
+    
+    /* Gradients */
+    --gradient-warm: linear-gradient(135deg, hsl(33 45% 96%) 0%, hsl(33 35% 92%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(43 56% 51%) 0%, hsl(43 66% 61%) 100%);
+    --gradient-navy: linear-gradient(135deg, hsl(210 77% 13%) 0%, hsl(210 77% 23%) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(25 25% 25% / 0.08);
+    --shadow-medium: 0 8px 30px -6px hsl(25 25% 25% / 0.12);
+    --shadow-glow: 0 0 40px hsl(43 56% 51% / 0.15);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    
+    --radius: 0.75rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 25 25% 12%;
+    --foreground: 33 45% 96%;
+
+    --card: 25 25% 15%;
+    --card-foreground: 33 45% 96%;
+
+    --popover: 25 25% 15%;
+    --popover-foreground: 33 45% 96%;
+
+    --primary: 210 77% 23%;
+    --primary-foreground: 33 45% 96%;
+
+    --secondary: 28 37% 25%;
+    --secondary-foreground: 33 45% 96%;
+
+    --muted: 25 20% 20%;
+    --muted-foreground: 33 20% 70%;
+
+    --accent: 43 56% 51%;
+    --accent-foreground: 25 25% 12%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 33 45% 96%;
+
+    --border: 25 20% 25%;
+    --input: 25 20% 22%;
+    --ring: 43 56% 51%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'Inter', sans-serif;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', serif;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .gradient-warm {
+    background: var(--gradient-warm);
+  }
+  
+  .gradient-gold {
+    background: var(--gradient-gold);
+  }
+  
+  .gradient-navy {
+    background: var(--gradient-navy);
+  }
+  
+  .shadow-soft {
+    box-shadow: var(--shadow-soft);
+  }
+  
+  .shadow-medium {
+    box-shadow: var(--shadow-medium);
+  }
+  
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+  
+  .transition-smooth {
+    transition: var(--transition-smooth);
+  }
+}
