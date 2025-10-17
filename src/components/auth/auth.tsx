@@ -7,7 +7,7 @@ import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import API from "@/lib/api"; // ✅ Updated to use centralized API instance
 
-import loginImage from "../assets/auth.jpg";
+import loginImage from "../../assets/auth.jpg";
 
 const Auth: React.FC = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -200,9 +200,12 @@ const Auth: React.FC = () => {
                   </span>
                 </div>
                 {!isSignUp && (
-                  <p className="text-right text-sm mt-2 font-semibold text-gray-500 hover:text-[#c59329] cursor-pointer">
+                  <a
+                    href="/auth/forgotpassword"
+                    className="text-right text-sm mt-2 font-semibold text-gray-500 hover:text-[#c59329] cursor-pointer block"
+                  >
                     Forgot Password?
-                  </p>
+                  </a>
                 )}
               </div>
 

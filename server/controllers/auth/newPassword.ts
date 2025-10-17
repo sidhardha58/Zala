@@ -6,15 +6,15 @@ connectDB();
 
 export const newPassword = async (req: Request, res: Response) => {
   try {
-    const { email, newPassword } = req.body;
+    const { hashedEmail, newPassword } = req.body;
 
-    if (!email || !newPassword) {
+    if (!hashedEmail || !newPassword) {
       return res.status(400).json({ error: "Email or password is missing" });
     }
 
     console.log("Request Body:", req.body);
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ hashedEmail });
 
     if (!user) {
       return res.status(400).json({ error: "Invalid email" });
@@ -26,6 +26,7 @@ export const newPassword = async (req: Request, res: Response) => {
     const hashedNewPassword = await bcryptjs.hash(newPassword, salt);
 
     user.password = hashedNewPassword;
+
     await user.save();
 
     return res

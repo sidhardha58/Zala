@@ -1,14 +1,14 @@
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import About from "@/components/About";
-import Experience from "@/components/Experience";
-import Pricing from "@/components/Pricing";
-import Library from "@/components/Library";
-import Franchise from "@/components/Franchise";
-import Events from "@/components/Events";
-import Contact from "@/components/Contact";
-import Footer from "@/components/Footer";
+import Navigation from "@/components/home/Navigation";
+import Hero from "@/components/home/Hero";
+import Features from "@/components/home/Features";
+import About from "@/components/home/About";
+import Experience from "@/components/home/Experience";
+import Pricing from "@/components/home/Pricing";
+import Library from "@/components/home/Library";
+import Franchise from "@/components/home/Franchise";
+import Events from "@/components/home/Events";
+import Contact from "@/components/home/Contact";
+import Footer from "@/components/home/Footer";
 
 const Index = () => {
   return (

@@ -3,6 +3,7 @@ import bcryptjs from "bcryptjs";
 import jwt from "jsonwebtoken";
 import User from "../../models/userModel";
 import { connectDB } from "../../dbConfig/dbConfig";
+import sendEmail from "../../helpers/mailer"; // ✅ import the sendEmail function
 
 connectDB();
 
@@ -28,8 +29,23 @@ export const signUp = async (req: Request, res: Response) => {
       username,
       email,
       password: hashedPassword,
-      isVerified: false, // You may want to handle email verification separately
+      isVerified: false,
     });
+
+    // ✅ Send email verification
+    try {
+      console.log("📤 Sending verification email...");
+      await sendEmail({
+        email: newUser.email,
+        emailType: "VERIFY",
+        userId: newUser._id,
+      });
+      console.log("✅ Verification email sent to:", newUser.email);
+    } catch (emailErr: any) {
+      console.error("❌ Failed to send verification email:", emailErr.message);
+      // Optionally: continue or return error
+      // return res.status(500).json({ error: "Failed to send verification email" });
+    }
 
     // Generate JWT token
     const tokenData = {
@@ -53,7 +69,7 @@ export const signUp = async (req: Request, res: Response) => {
     console.log("✅ Signup successful for:", email);
 
     return res.status(201).json({
-      message: "Signup successful",
+      message: "Signup successful. Please check your email for verification.",
       success: true,
       user: {
         id: newUser._id,
@@ -62,7 +78,7 @@ export const signUp = async (req: Request, res: Response) => {
       },
     });
   } catch (error: any) {
-    console.error("🔥 Error during signup:", error);
+    console.error("🔥 Error during signup:", error.message);
     return res.status(500).json({ error: "Internal Server Error" });
   }
 };

@@ -14,10 +14,10 @@ const router = express.Router();
 // Routes
 router.post("/signup", signUp);
 router.post("/signin", signIn);
-router.post("/verify-email", verifyEmail);
-router.post("/save-user", saveUser);
-router.post("/forgot-password", forgetPassword);
-router.post("/reset-password", resetPassword);
-router.post("/new-password", newPassword);
+router.post("/verifyemail", verifyEmail);
+router.post("/saveuser", saveUser);
+router.post("/forgotpassword", forgetPassword);
+router.post("/resetpassword", resetPassword);
+router.post("/newpassword", newPassword);
 
 export default router;
