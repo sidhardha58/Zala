@@ -11,7 +11,9 @@ import ResetPassword from "./components/auth/resetpassword";
 import ForgotPassword from "./components/auth/forgotpassowrd";
 import NewPassword from "./components/auth/newpassword";
 
-// ✅ Add these:
+// ✅ New import
+import ProtectedRoute from "@/components/auth/ProtectedRoute";
+
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
@@ -22,16 +24,26 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      {/* ✅ Add this line for react-toastify */}
       <ToastContainer position="top-right" autoClose={3000} />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Index />} />
+          {/* ✅ Protected Home Page */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <Index />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Auth routes — public */}
           <Route path="/auth" element={<Auth />} />
           <Route path="/auth/verifyemail" element={<VerifyEmail />} />
           <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
           <Route path="/auth/resetpassword" element={<ResetPassword />} />
           <Route path="/auth/newpassword" element={<NewPassword />} />
+
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
