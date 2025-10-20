@@ -10,6 +10,7 @@ import VerifyEmail from "./components/auth/verifyemail";
 import ResetPassword from "./components/auth/resetpassword";
 import ForgotPassword from "./components/auth/forgotpassowrd";
 import NewPassword from "./components/auth/newpassword";
+import Profile from "./pages/profile";
 
 // ✅ New import
 import ProtectedRoute from "@/components/auth/ProtectedRoute";
@@ -43,6 +44,7 @@ const App = () => (
           <Route path="/auth/forgotpassword" element={<ForgotPassword />} />
           <Route path="/auth/resetpassword" element={<ResetPassword />} />
           <Route path="/auth/newpassword" element={<NewPassword />} />
+          <Route path="/user/profile" element={<Profile />} />
 
           <Route path="*" element={<NotFound />} />
         </Routes>

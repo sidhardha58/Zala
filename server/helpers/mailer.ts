@@ -2,26 +2,46 @@ import nodemailer from "nodemailer";
 import User from "../models/userModel";
 import bcryptjs from "bcryptjs";
 
-export default async function sendEmail({ email, emailType, userId }: any) {
+interface EmailOptions {
+  email: string; // recipient email (admin or user)
+  emailType: "VERIFY" | "RESET" | "FEEDBACK";
+  userId?: string;
+  message?: string; // only for FEEDBACK email
+  userEmail?: string; // user's email (for replyTo in FEEDBACK)
+}
+
+export default async function sendEmail({
+  email,
+  emailType,
+  userId,
+  message,
+  userEmail,
+}: EmailOptions) {
   try {
-    let hashedToken = await bcryptjs.hash(userId.toString(), 10);
-    let hashedEmail = await bcryptjs.hash(email, 10);
+    // For VERIFY or RESET emails, generate hashed tokens and update user
+    let hashedToken = "";
+    let hashedEmail = "";
 
-    hashedToken = hashedToken.replace(/[^a-zA-Z0-9]/g, "");
-    hashedEmail = hashedEmail.replace(/[^a-zA-Z0-9]/g, "");
+    if (emailType === "VERIFY" || emailType === "RESET") {
+      hashedToken = await bcryptjs.hash(userId!.toString(), 10);
+      hashedEmail = await bcryptjs.hash(email, 10);
 
-    if (emailType === "VERIFY") {
-      await User.findByIdAndUpdate(userId, {
-        verifyToken: hashedToken,
-        verifyTokenExpiry: Date.now() + 3600000,
-        hashedEmail: hashedEmail,
-      });
-    } else if (emailType === "RESET") {
-      await User.findByIdAndUpdate(userId, {
-        forgotPasswordToken: hashedToken,
-        forgotPasswordTokenExpiry: Date.now() + 3600000,
-        hashedEmail: hashedEmail,
-      });
+      hashedToken = hashedToken.replace(/[^a-zA-Z0-9]/g, "");
+      hashedEmail = hashedEmail.replace(/[^a-zA-Z0-9]/g, "");
+
+      if (emailType === "VERIFY") {
+        await User.findByIdAndUpdate(userId, {
+          verifyToken: hashedToken,
+          verifyTokenExpiry: Date.now() + 3600000,
+          hashedEmail: hashedEmail,
+        });
+      } else if (emailType === "RESET") {
+        await User.findByIdAndUpdate(userId, {
+          forgotPasswordToken: hashedToken,
+          forgotPasswordTokenExpiry: Date.now() + 3600000,
+          hashedEmail: hashedEmail,
+        });
+      }
     }
 
     const transport = nodemailer.createTransport({
@@ -33,28 +53,125 @@ export default async function sendEmail({ email, emailType, userId }: any) {
       },
     });
 
-    const verificationLink = `${process.env.DOMAIN}/auth/${
-      emailType === "VERIFY" ? "verifyemail" : "resetpassword"
-    }/?token=${encodeURIComponent(hashedToken)}&id=${encodeURIComponent(
-      hashedEmail
-    )}`;
+    let mailOptions;
 
-    const mailOptions = {
-      from: "sidhardha.vsp@gmail.com",
-      to: email,
-      subject:
-        emailType === "VERIFY"
-          ? "Verify your ZALA account"
-          : "Reset your ZALA password",
-      html: `
+    if (emailType === "FEEDBACK") {
+      const userNameMatch = message?.match(
+        /<strong>Name:<\/strong>\s?(.*?)<\/p>/
+      );
+      const userName = userNameMatch ? userNameMatch[1] : "A user";
+
+      const interestMatch = message?.match(
+        /<strong>Interest:<\/strong>\s?(.*?)<\/p>/
+      );
+      const userInterest = interestMatch ? interestMatch[1] : "General Inquiry";
+
+      mailOptions = {
+        from: "sidhardha.vsp@gmail.com",
+        to: "bookscomealive.zala@gmail.com",
+        replyTo: userEmail,
+        subject: `📨 ${userName} sent a message – ${userInterest}`,
+        html: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8" />
+  <title>New Feedback Received</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 20px;
+      color: #1f2937;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(90deg, #0a0f1a, #1a2a40);
+      color: #f9d47d;
+      padding: 20px;
+      text-align: center;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 22px;
+    }
+    .content {
+      padding: 20px 30px;
+    }
+    .content h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .content p {
+      margin: 8px 0;
+      line-height: 1.6;
+    }
+    .footer {
+      background-color: #f3f4f6;
+      padding: 15px 30px;
+      text-align: center;
+      font-size: 13px;
+      color: #6b7280;
+    }
+    .footer a {
+      color: #1a2a40;
+      text-decoration: none;
+      font-weight: 500;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>ZALA Feedback</h1>
+    </div>
+    <div class="content">
+      <h2>You've received new feedback</h2>
+      ${message}
+      <p><strong>Submitted on:</strong> ${new Date().toLocaleString()}</p>
+    </div>
+    <div class="footer">
+      <p>Reply to this message: <a href="mailto:${userEmail}">${userEmail}</a></p>
+      <p>© 2025 ZALA</p>
+    </div>
+  </div>
+</body>
+</html>
+    `,
+      };
+    } else {
+      // VERIFY or RESET email
+      const verificationLink = `${process.env.DOMAIN}/auth/${
+        emailType === "VERIFY" ? "verifyemail" : "resetpassword"
+      }/?token=${encodeURIComponent(hashedToken)}&id=${encodeURIComponent(
+        hashedEmail
+      )}`;
+
+      mailOptions = {
+        from: "sidhardha.vsp@gmail.com",
+        to: email,
+        subject:
+          emailType === "VERIFY"
+            ? "Verify your ZALA account"
+            : "Reset your ZALA password",
+        html: `
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>${
-        emailType === "VERIFY" ? "Email Verification" : "Password Reset"
-      }</title>
+          emailType === "VERIFY" ? "Email Verification" : "Password Reset"
+        }</title>
 <style>
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -122,7 +239,8 @@ export default async function sendEmail({ email, emailType, userId }: any) {
 </body>
 </html>
 `,
-    };
+      };
+    }
 
     const mailResponse = await transport.sendMail(mailOptions);
     return mailResponse;

@@ -1,13 +1,73 @@
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Mail, Briefcase, MapPin } from "lucide-react";
-import { FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa"; // ✅ Replaced brand icons
+import { FaInstagram, FaLinkedinIn, FaYoutube } from "react-icons/fa";
+import API from "@/lib/api";
+import { toast } from "@/hooks/use-toast";
 
 const Contact = () => {
+  const [user, setUser] = useState<{ username: string; email: string } | null>(
+    null
+  );
+
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    interest: "General Support",
+    message: "",
+  });
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await API.get("/auth/user/profile");
+        const { username, email } = res.data.profile;
+        setUser({ username, email });
+        setForm((prev) => ({
+          ...prev,
+          name: username,
+          email: email,
+        }));
+      } catch (error) {
+        // User not logged in — leave blank
+      }
+    };
+    fetchUser();
+  }, []);
+
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >
+  ) => {
+    const { id, value } = e.target;
+    setForm((prev) => ({ ...prev, [id]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await API.post("/feedback", form);
+      toast({ title: "Message sent successfully!" });
+      setForm((prev) => ({
+        ...prev,
+        interest: "General Support",
+        message: "",
+      }));
+    } catch (error) {
+      toast({ title: "Failed to send message", variant: "destructive" });
+    }
+  };
+
   return (
-    <section id="contact" className=" px-4 bg-card relative overflow-hidden">
+    <section
+      id="contact"
+      className="px-4 bg-card relative overflow-hidden mb-2"
+    >
       {/* ✅ ZALA Logo Background */}
       <img
         src="/logo.png"
@@ -31,7 +91,7 @@ const Contact = () => {
             <h3 className="text-2xl font-bold text-foreground font-playfair mb-6">
               Send us a message
             </h3>
-            <form className="space-y-4">
+            <form className="space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label
                   htmlFor="name"
@@ -41,8 +101,13 @@ const Contact = () => {
                 </label>
                 <Input
                   id="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  readOnly={!!user}
                   placeholder="Your name"
-                  className="bg-background border-border"
+                  className={`bg-background border-border ${
+                    user ? "text-muted-foreground cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
               <div>
@@ -54,9 +119,14 @@ const Contact = () => {
                 </label>
                 <Input
                   id="email"
+                  value={form.email}
+                  onChange={handleChange}
                   type="email"
+                  readOnly={!!user}
                   placeholder="your@email.com"
-                  className="bg-background border-border"
+                  className={`bg-background border-border ${
+                    user ? "text-muted-foreground cursor-not-allowed" : ""
+                  }`}
                 />
               </div>
               <div>
@@ -68,13 +138,19 @@ const Contact = () => {
                 </label>
                 <select
                   id="interest"
-                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
+                  value={form.interest}
+                  onChange={handleChange}
+                  className="w-full px-3 py-2 bg-background border border-border rounded-md text-foreground focus:outline-none focus:ring-2 focus:ring-accent cursor-pointer transition-colors"
                 >
+                  <option disabled value="">
+                    -- Please select an option --
+                  </option>
                   <option>Demo Request</option>
-                  <option>Franchise Opportunity</option>
-                  <option>Press Inquiry</option>
-                  <option>General Support</option>
-                  <option>Partnership</option>
+                  <option>Franchise / Licensing Opportunity</option>
+                  <option>Press & Media</option>
+                  <option>Technical Support</option>
+                  <option>Partnership Inquiry</option>
+                  <option>General Feedback & Suggestions</option>
                 </select>
               </div>
               <div>
@@ -86,6 +162,8 @@ const Contact = () => {
                 </label>
                 <Textarea
                   id="message"
+                  value={form.message}
+                  onChange={handleChange}
                   placeholder="Tell us more..."
                   className="bg-background border-border min-h-[120px]"
                 />
@@ -118,7 +196,7 @@ const Contact = () => {
                     href="mailto:hello@zala.world"
                     className="text-accent hover:underline font-medium"
                   >
-                    hello@zala.world
+                    bookscomealive.zala@gmail.com
                   </a>
                 </div>
               </div>
@@ -176,7 +254,7 @@ const Contact = () => {
                   <FaInstagram className="w-5 h-5" />
                 </a>
                 <a
-                  href="https://linkedin.com"
+                  href="https://www.linkedin.com/in/zala-where-books-comes-alive-089a24389/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-12 h-12 rounded-full border border-border bg-background flex items-center justify-center hover:bg-accent hover:border-accent hover:text-accent-foreground transition-smooth"

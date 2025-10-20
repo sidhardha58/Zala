@@ -7,6 +7,7 @@ import cookieParser from "cookie-parser";
 dotenv.config();
 
 import authRoutes from "./routes/authRoute";
+import feedbackRoutes from "./routes/feedbackRoute";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(cookieParser());
 
 // Routes
 app.use("/api/auth", authRoutes);
+app.use("/api/feedback", feedbackRoutes);
 
 // Test route
 app.get("/", (req, res) => {

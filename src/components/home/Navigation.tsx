@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UserButton } from "./UserButton";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +17,9 @@ const Navigation = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <h1 className="text-2xl font-bold text-primary font-playfair">ZALA</h1>
+            <h1 className="text-2xl font-bold text-primary font-playfair">
+              ZALA
+            </h1>
           </div>
 
           {/* Desktop Navigation */}
@@ -57,9 +60,7 @@ const Navigation = () => {
             >
               Contact
             </button>
-            <Button variant="default" size="sm" onClick={() => scrollToSection("demo")}>
-              Try Demo
-            </Button>
+            <UserButton />
           </div>
 
           {/* Mobile menu button */}
@@ -113,7 +114,11 @@ const Navigation = () => {
               >
                 Contact
               </button>
-              <Button variant="default" size="sm" onClick={() => scrollToSection("demo")}>
+              <Button
+                variant="default"
+                size="sm"
+                onClick={() => scrollToSection("demo")}
+              >
                 Try Demo
               </Button>
             </div>

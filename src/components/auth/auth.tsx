@@ -65,7 +65,7 @@ const Auth: React.FC = () => {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      await API.post("/auth/save-user", {
+      await API.post("/auth/saveuser", {
         _id: user.uid,
         username: user.displayName || "User",
         email: user.email,
