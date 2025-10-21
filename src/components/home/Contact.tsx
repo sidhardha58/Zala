@@ -202,7 +202,7 @@ const Contact = () => {
               </div>
             </Card>
 
-            {/* Careers Card */}
+            {/* Team Invitation Card */}
             <Card className="p-6 shadow-soft border-border bg-card">
               <div className="flex items-start gap-4">
                 <div className="w-12 h-12 rounded-full gradient-gold flex items-center justify-center flex-shrink-0">
@@ -210,14 +210,18 @@ const Contact = () => {
                 </div>
                 <div>
                   <h4 className="font-bold text-foreground mb-2 font-inter">
-                    Careers
+                    Join Our Team
                   </h4>
                   <p className="text-muted-foreground mb-2 text-sm">
-                    Join our team and help shape the future of reading
+                    Are you a storyteller, developer, or creative who shares our
+                    vision? Let’s build the future together.
                   </p>
-                  <Button variant="link" className="text-accent p-0 h-auto">
-                    View open positions →
-                  </Button>
+                  <a
+                    href="/team"
+                    className="text-accent hover:underline font-medium text-sm"
+                  >
+                    Meet our Team →
+                  </a>
                 </div>
               </div>
             </Card>
