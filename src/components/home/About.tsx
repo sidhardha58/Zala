@@ -6,7 +6,7 @@ const About = () => {
     <section id="about" className="relative py-20 px-4 bg-card overflow-hidden">
       {/* 🔵 Background logo - full page faint logo */}
       <img
-        src="/favicon.png" // Change to /abt.png if needed
+        src="/about bg.png" // Change to /abt.png if needed
         alt="Background logo"
         className="absolute inset-0 mx-auto top-1/2 -translate-y-1/2 w-[1100px] opacity-100 pointer-events-none z-0"
       />

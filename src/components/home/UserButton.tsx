@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { LogOut, User } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import API from "@/lib/api"; // ✅ Use your configured Axios instance
+import axios from "axios";
 
 export function UserButton() {
   const [open, setOpen] = useState(false);
@@ -52,7 +53,7 @@ export function UserButton() {
   // ✅ Handle Logout
   const handleLogout = async () => {
     try {
-      await API.post("/logout"); // same base URL
+      await axios.get("/api/auth/logout");
       toast({ title: "Logout successful" });
       navigate("/auth");
     } catch (error) {
