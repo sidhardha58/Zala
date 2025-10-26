@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-// Load env vars
+// Load environment variables
 dotenv.config();
 
 import authRoutes from "./routes/authRoute";
@@ -11,8 +11,17 @@ import feedbackRoutes from "./routes/feedbackRoute";
 
 const app = express();
 
+// Use environment variable for frontend URL
+const FRONTEND_URL = process.env.DOMAIN || "http://localhost:8080";
+console.log("✅ CORS allowed for frontend:", FRONTEND_URL);
+
 // Middleware
-app.use(cors({ origin: "http://localhost:8080", credentials: true }));
+app.use(
+  cors({
+    origin: FRONTEND_URL,
+    credentials: true,
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
 

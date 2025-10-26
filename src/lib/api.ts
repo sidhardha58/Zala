@@ -2,7 +2,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api", // ✅ change if deployed
+  baseURL: "https://zala-q5yw.onrender.com/api", // ✅ change if deployed
   withCredentials: true, // if using cookies/sessions
 });
 
