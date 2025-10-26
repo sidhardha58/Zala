@@ -6,9 +6,9 @@
   "type": "commonjs",
   "scripts": {
     "clean": "rimraf dist",
-    "dev": "nodemon --exec ts-node server.ts",
     "build": "npm run clean && tsc",
-    "start": "node dist/server.js"
+    "start": "nodemon --exec ts-node server.ts",
+    "serve": "node dist/server.js"
   },
   "keywords": [],
   "author": "",
