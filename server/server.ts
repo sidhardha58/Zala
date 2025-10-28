@@ -12,7 +12,7 @@ import feedbackRoutes from "./routes/feedbackRoute";
 const app = express();
 
 // Use environment variable for frontend URL
-const FRONTEND_URL = process.env.DOMAIN || "http://localhost:8080";
+const FRONTEND_URL = process.env.DOMAIN;
 console.log("✅ CORS allowed for frontend:", FRONTEND_URL);
 
 // Middleware
