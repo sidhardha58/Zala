@@ -8,9 +8,12 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/auth/me", {
-          withCredentials: true,
-        });
+        const res = await axios.get(
+          "https://zala-q5yw.onrender.com/api/auth/me",
+          {
+            withCredentials: true,
+          }
+        );
         if (res.data.user) {
           setIsAuth(true);
         } else {
