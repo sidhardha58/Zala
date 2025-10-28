@@ -13,18 +13,15 @@ export const signIn = async (req: Request, res: Response) => {
 
     const user = await User.findOne({ email });
     if (!user) {
-      console.warn("❌ User not found:", email);
       return res.status(400).json({ error: "User does not exist" });
     }
 
     const validPassword = await bcryptjs.compare(password, user.password);
     if (!validPassword) {
-      console.warn("❌ Invalid password for:", email);
       return res.status(400).json({ error: "Invalid Password" });
     }
 
     if (!user.isVerified) {
-      console.warn("⚠️ Unverified user login attempt:", email);
       return res
         .status(400)
         .json({ error: "Please verify your email before logging in." });
@@ -40,15 +37,14 @@ export const signIn = async (req: Request, res: Response) => {
       expiresIn: "1d",
     });
 
-    // Set token cookie
+    // ✅ Cross-domain cookie
     res.cookie("token", token, {
       httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // must be true in prod
+      sameSite: "none", // allow cross-site
       path: "/",
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 24 * 60 * 60 * 1000, // 1 day in ms
+      maxAge: 24 * 60 * 60 * 1000, // 1 day
     });
-
-    console.log("✅ Login successful for:", email);
 
     return res.status(200).json({
       message: "Login successful",

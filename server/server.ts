@@ -3,7 +3,6 @@ import cors from "cors";
 import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 
-// Load environment variables
 dotenv.config();
 
 import authRoutes from "./routes/authRoute";
@@ -11,20 +10,18 @@ import feedbackRoutes from "./routes/feedbackRoute";
 
 const app = express();
 
-// ✅ Define all allowed origins (both local & deployed)
+// ✅ Allowed frontend origins
 const allowedOrigins = [
-  "http://localhost:5173", // Vite dev server
-  "http://localhost:8080", // Local production preview
-  process.env.DOMAIN, // Production frontend (from .env or Render)
-].filter(Boolean); // remove undefined/null if DOMAIN isn't set
+  "http://localhost:5173",
+  "http://localhost:8080",
+  process.env.DOMAIN, // Production frontend
+].filter(Boolean);
 
 console.log("✅ Allowed CORS origins:", allowedOrigins);
 
-// ✅ Configure CORS dynamically
 app.use(
   cors({
     origin: (origin, callback) => {
-      // Allow requests with no origin (like mobile apps or curl)
       if (!origin || allowedOrigins.includes(origin)) {
         callback(null, true);
       } else {
@@ -32,11 +29,10 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    credentials: true,
+    credentials: true, // ✅ allow cookies
   })
 );
 
-// Middleware
 app.use(express.json());
 app.use(cookieParser());
 

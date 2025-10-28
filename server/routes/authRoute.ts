@@ -1,11 +1,9 @@
-// server/routes/authRoute.ts
-
-import express, { Response } from "express";
-import multer from "multer"; // ✅ Import multer
+import express from "express";
+import multer from "multer";
 import { requireAuth, AuthenticatedRequest } from "../middleware/requireAuth";
 
 const router = express.Router();
-const upload = multer({ storage: multer.memoryStorage() }); // ✅ Define upload middleware
+const upload = multer({ storage: multer.memoryStorage() });
 
 // Auth controllers
 import { signUp } from "../controllers/auth/signUp";
@@ -30,8 +28,8 @@ router.post("/forgotpassword", forgetPassword);
 router.post("/resetpassword", resetPassword);
 router.post("/newpassword", newPassword);
 
-// Protected test route
-router.get("/me", requireAuth, (req: AuthenticatedRequest, res: Response) => {
+// ✅ Protected routes
+router.get("/me", requireAuth, (req: AuthenticatedRequest, res) => {
   res.status(200).json({
     message: "Welcome, authenticated user!",
     user: req.user,
@@ -42,7 +40,7 @@ router.get("/me", requireAuth, (req: AuthenticatedRequest, res: Response) => {
 router.get("/user/profile", requireAuth, getProfile);
 router.put("/user/updatebio", requireAuth, updateBio);
 
-// ✅ Upload profile image with multer middleware
+// Upload profile image
 router.post(
   "/user/uploadProfileImage",
   requireAuth,
