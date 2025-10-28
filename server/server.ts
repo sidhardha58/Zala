@@ -11,17 +11,32 @@ import feedbackRoutes from "./routes/feedbackRoute";
 
 const app = express();
 
-// Use environment variable for frontend URL
-const FRONTEND_URL = process.env.DOMAIN;
-console.log("✅ CORS allowed for frontend:", FRONTEND_URL);
+// ✅ Define all allowed origins (both local & deployed)
+const allowedOrigins = [
+  "http://localhost:5173", // Vite dev server
+  "http://localhost:8080", // Local production preview
+  process.env.DOMAIN, // Production frontend (from .env or Render)
+].filter(Boolean); // remove undefined/null if DOMAIN isn't set
 
-// Middleware
+console.log("✅ Allowed CORS origins:", allowedOrigins);
+
+// ✅ Configure CORS dynamically
 app.use(
   cors({
-    origin: FRONTEND_URL,
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        console.warn("🚫 CORS blocked for origin:", origin);
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
   })
 );
+
+// Middleware
 app.use(express.json());
 app.use(cookieParser());
 
@@ -31,9 +46,11 @@ app.use("/api/feedback", feedbackRoutes);
 
 // Test route
 app.get("/", (req, res) => {
-  res.send("API is running...");
+  res.send("✅ Immerse API is running...");
 });
 
 // Server
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+app.listen(PORT, () => {
+  console.log(`✅ Server running on port ${PORT}`);
+});
