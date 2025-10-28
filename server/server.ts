@@ -14,6 +14,8 @@ const app = express();
 const allowedOrigins = [
   "http://localhost:5173",
   "http://localhost:8080",
+  "https://zala-8639a.firebaseapp.com",
+  "https://zala-cyan.vercel.app/",
   process.env.DOMAIN, // Production frontend
 ].filter(Boolean);
 
