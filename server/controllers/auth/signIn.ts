@@ -40,7 +40,7 @@ export const signIn = async (req: Request, res: Response) => {
     // ✅ Cross-domain cookie
     res.cookie("token", token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production", // must be true in prod
+      secure: true,
       sameSite: "none", // allow cross-site
       path: "/",
       maxAge: 24 * 60 * 60 * 1000, // 1 day
